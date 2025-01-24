@@ -125,7 +125,12 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI, {
+    ssl: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tlsAllowInvalidCertificates: false
+  })
   .then((result) => {
     // https
     //   .createServer({ key: privateKey, cert: certificate }, app)
