@@ -13,6 +13,7 @@ const multer = require("multer");
 const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
+const crypto = require("crypto");
 
 const errorController = require("./controllers/error");
 const User = require("./models/user");
@@ -67,7 +68,28 @@ const accessLogStream = fs.createWriteStream(
   { flags: "a" }
 );
 
-app.use(helmet());
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString("base64");
+  next();
+});
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'", // Allow scripts from the same origin
+          "https://js.stripe.com/v3/", // Allow Stripe scripts
+          (req, res) => `'nonce-${res.locals.nonce}'`, // Allow inline scripts with a nonce
+        ],
+        frameSrc: ["https://js.stripe.com/"], //ALlow stripe to load iframes
+        objectSrc: ["'none'"], // Disallow <object>, <embed>, <applet>
+        upgradeInsecureRequests: [], // Automatically upgrade HTTP to HTTPS
+      },
+    },
+  })
+);
 app.use(compression());
 app.use(morgan("combined", { stream: accessLogStream }));
 
@@ -129,14 +151,14 @@ mongoose
     ssl: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    tlsAllowInvalidCertificates: false
+    tlsAllowInvalidCertificates: false,
   })
   .then((result) => {
     // https
     //   .createServer({ key: privateKey, cert: certificate }, app)
     //   .listen(process.env.PORT || 3000);
     app.listen(process.env.PORT || 3000);
-    
+
     console.log("Connected!");
   })
   .catch((err) => {

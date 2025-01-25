@@ -4,6 +4,7 @@
         "MONGO_PASSWORD": "AsdfghjkL1229",
         "MONGO_DEFAULT_DATABASE": "shop",
         "STRIPE_KEY": "sk_test_51QeM65QRzrLSioiffVt7XDpKznaBcMZxw4UWiYywyCvkTEqDvkCIPO7E2WGuaKGAaFjYZkkpYe5hVcK2lA2zoLIj00MWB5ghcJ",
-        "NODEMAILER_KEY": "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"
+        "NODEMAILER_KEY": "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",
+        "STRIPE_PUBLIC_KEY": "pk_test_51QeM65QRzrLSioifmMYhbakEuTKBk78ei2kbxQQ0TFyJqWIw4GGHKt2kxt2aflj0qbx6wPSbCgih09WtvzsfgPyA00aNFepSA0"
     }
 }

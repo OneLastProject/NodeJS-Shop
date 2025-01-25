@@ -9,6 +9,7 @@ const Order = require("../models/order");
 
 const ITEMS_PER_PAGE = 2;
 
+
 exports.getProducts = (req, res, next) => {
   const page = +req.query.page || 1;
   let totalItems;
@@ -164,14 +165,19 @@ exports.getCheckout = (req, res, next) => {
       success_url: req.protocol + '://' + req.get('host') + '/checkout/success',
       cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
     });
+    
   })
   .then(session => {
+    console.log('Here');
+    // const stripePublicKey = '${process.env.STRIPE_PUBLIC_KEY}'; 
+    // console.log(stripePublicKey);
     res.render("shop/checkout", {
       path: "/checkout",
-      pageTitle: "Checkoput",
+      pageTitle: "Checkout",
       products: products,
       totalSum: total,
-      sessionId: session.id
+      sessionId: session.id,
+      stripePublicKey: process.env.STRIPE_PUBLIC_KEY
     });
   })
   .catch((err) => {
